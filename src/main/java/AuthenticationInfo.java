@@ -6,6 +6,4 @@ public class AuthenticationInfo {
     String applicationClientID = "Your application client ID";
     String clientSecret = "Your client secret here";
     String code = "Your code here";
-
-    public
 }
