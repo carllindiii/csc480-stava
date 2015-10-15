@@ -20,7 +20,8 @@ public class Main {
         // get code using oauth
 
 
-        Token token = service.tokenExchange(authInfo.getApplicationClientID(), authInfo.getClientSecret(), "");
+//        Token token = service.tokenExchange(authInfo.getApplicationClientID(), authInfo.getClientSecret(), "");
+        Token token = new Token();
         Strava strava = new Strava(token);
 
         // list of segments
