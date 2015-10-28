@@ -4,7 +4,6 @@ import (
    "flag"
    "fmt"
    "os"
-
    "github.com/strava/go.strava"
 )
 
