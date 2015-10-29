@@ -78,7 +78,7 @@ func averageLineSegmentLength(points [][2]float64) float64 {
 func countDRPSimplifications(points [][2]float64, epsilon float64) int64 {
    // Base case: 2 or fewer points.
    if len(points) <3 {
-      return 0
+      return 1
    } else {
       // First, figure out if this path would be simplified.
       // To do this, start by finding the point with the greatest distance
