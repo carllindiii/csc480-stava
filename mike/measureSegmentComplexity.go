@@ -41,13 +41,18 @@ func getSegment(segmentId int64, accessToken string) strava.SegmentDetailed {
    return *segment
 }
 
+const epsilonRatio float64 = 0.2
+
 func measureSegmentComplexity(segmentId int64, accessToken string) {
    var segment strava.SegmentDetailed = getSegment(segmentId, accessToken)
    var polyline strava.Polyline = segment.Map.Polyline
 
    var points [][2]float64 = polyline.Decode()
 
-   var complexityScore = countDRPSimplifications(points)
+   var averageLength float64 = averageLineSegmentLength(points)
+   var epsilon = averageLength * epsilonRatio
+
+   var complexityScore = countDRPSimplifications(points, epsilon)
 
    fmt.Println("Segment ", segmentId, " has a complexity score of ", complexityScore)
 }
@@ -55,24 +60,24 @@ func measureSegmentComplexity(segmentId int64, accessToken string) {
 func averageLineSegmentLength(points [][2]float64) float64 {
    var total float64 = 0
 
-   for var i = 0; i < points.length - 1; i++ {
+   for i := 0; i < len(points) - 1; i++ {
       var xDistance = points[i + 1][0] - points[i][0]
       var yDistance = points[i + 1][1] - points[i][1]
-      total += math.sqrt(xDistance * xDistance + yDistance * yDistance)
+      total += math.Sqrt(xDistance * xDistance + yDistance * yDistance)
    }
 
-   if points.length <= 1 {
+   if len(points) <= 1 {
       return 0.0 // what else?
    } else {
-      return total / (points.length - 1)
+      return total / float64(len(points) - 1)
    }
 }
 
+// This is a modification of the Ramer-Douglas-Peucker algorithm that just
+// counts the number of times that it would simplify the path.
 func countDRPSimplifications(points [][2]float64, epsilon float64) int64 {
-   var length int64 = points.length
-
    // Base case: 2 or fewer points.
-   if points.length <3 {
+   if len(points) <3 {
       return 0
    } else {
       // First, figure out if this path would be simplified.
@@ -83,17 +88,32 @@ func countDRPSimplifications(points [][2]float64, epsilon float64) int64 {
 
       var wholeSegment [2][2]float64
       wholeSegment[0] = points[0]
-      wholeSegment[1] = points[wholeSegment.length - 1]
+      wholeSegment[1] = points[len(points) - 1]
 
-      for var i int64 = 0; i < points.length; i++ {
+      for i := 0; i < len(points); i++ {
          var distance float64 = getDistanceFromSegment(points[i], wholeSegment)
          if distance > maxDistance {
             maxDistance = distance
-            maxDistanceIndex = i
+            maxDistanceIndex = int64(i)
          }
       }
 
-      // TODO
+      if maxDistance > epsilon {
+         // If the distance is too great, split the problem
+         // Note that both subproblems include the split point. This is fine.
+         var firstSubproblemPoints [][2]float64 = points[:maxDistanceIndex]
+         var secondSubproblemPoints [][2]float64 = points[maxDistanceIndex:]
+
+         // Recurse on the subproblems
+         var firstSimplificationCount = countDRPSimplifications(firstSubproblemPoints, epsilon)
+         var secondSimplificationCount = countDRPSimplifications(secondSubproblemPoints, epsilon)
+
+         return firstSimplificationCount + secondSimplificationCount
+      } else {
+         // If the points are all within epsilon of the overall line segment,
+         // then just do (count) a single simplification.
+         return 1
+      }
    }
 }
 
@@ -118,16 +138,16 @@ func getDistanceFromSegment(point [2]float64, segment [2][2]float64) float64 {
    // If either of these dot products is negative, it's a special case
    if dotA < 0 {
       // Find the euclidean distance from P to A.
-      return math.sqrt(AtoP[0] * AtoP[0] + AtoP[1] * AtoP[1])
+      return math.Sqrt(AtoP[0] * AtoP[0] + AtoP[1] * AtoP[1])
    } else if dotB < 0 {
       // Find the euclidean distance form P to B.
-      return math.sqrt(BtoP[0] * BtoP[0] + BtoP[1] * BtoP[1])
+      return math.Sqrt(BtoP[0] * BtoP[0] + BtoP[1] * BtoP[1])
    } else {
       // Otherwise find the point to line distance.
       // from mathworld.wolfram.com/Point-LineDistance2-Dimensional.html
       // equation (14)
-      var numerator = math.abs(AtoP[0] * AtoB[1] - AtoP[1] * AtoB[0])
-      var denominator = math.sqrt(AtoB[0] * AtoB[0] + AtoB[1] * AtoB[1])
+      var numerator = math.Abs(AtoP[0] * AtoB[1] - AtoP[1] * AtoB[0])
+      var denominator = math.Sqrt(AtoB[0] * AtoB[0] + AtoB[1] * AtoB[1])
       return numerator / denominator
    }
 }
