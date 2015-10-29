@@ -42,8 +42,6 @@ func main() {
 	client := strava.NewClient(accessToken)
 
 
-	//get distance, average_grade, elevation_high, elevation_low 
-	//climb_category, total_elevation_gain, hazardous
 	for i := 0; i < SIZE; i++{
 
 		segmentId = segmentList[i]
