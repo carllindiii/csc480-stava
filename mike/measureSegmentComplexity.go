@@ -52,7 +52,23 @@ func measureSegmentComplexity(segmentId int64, accessToken string) {
    fmt.Println("Segment ", segmentId, " has a complexity score of ", complexityScore)
 }
 
-func countDRPSimplifications(points [][2]float64) int64 {
+func averageLineSegmentLength(points [][2]float64) float64 {
+   var total float64 = 0
+
+   for var i = 0; i < points.length - 1; i++ {
+      var xDistance = points[i + 1][0] - points[i][0]
+      var yDistance = points[i + 1][1] - points[i][1]
+      total += math.sqrt(xDistance * xDistance + yDistance * yDistance)
+   }
+
+   if points.length <= 1 {
+      return 0.0 // what else?
+   } else {
+      return total / (points.length - 1)
+   }
+}
+
+func countDRPSimplifications(points [][2]float64, epsilon float64) int64 {
    var length int64 = points.length
 
    // Base case: 2 or fewer points.
