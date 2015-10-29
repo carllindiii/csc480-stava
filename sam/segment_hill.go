@@ -1,12 +1,7 @@
-// segment_example.go provides a simple example to fetch a segment details
-// and list the top 10 on the leaderboard.
-//
-// usage:
-//   > go get github.com/strava/go.strava
-//   > cd $GOPATH/github.com/strava/go.strava/examples
-//   > go run segment_example.go -id=segment_id -token=access_token
-//
-//   You can find an access_token for your app at https://www.strava.com/settings/api
+// segment_hill.go fetches the given segments and
+// labels whether they are an uphill or downhill segment
+// This will be used to assist us when looking at average
+// speed of a segment
 package main
 
 import (
@@ -67,5 +62,4 @@ func main() {
 			fmt.Printf("Downhill\n\n")
 		}
 	}
-
 }
