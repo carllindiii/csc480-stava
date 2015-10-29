@@ -42,7 +42,6 @@ func main() {
 	client := strava.NewClient(accessToken)
 
 
-
 	//get distance, average_grade, elevation_high, elevation_low 
 	//climb_category, total_elevation_gain, hazardous
 	for i := 0; i < SIZE; i++{
@@ -63,9 +62,12 @@ func main() {
 		}
 		fmt.Printf("%s, %s %d times by %d athletes\n\n",
 				 segment.Name, verb, segment.EffortCount, segment.AthleteCount)
-		fmt.Printf("Distance: %f, average_grade: %f, elevation_high: %f, elevation_low: %f, climb_category: %d, total_elevation_gain: %f\n\n",
-		 			segment.Distance, segment.AverageGrade, segment.ElevationHigh, segment.ElevationLow,
-					segment.ClimbCategory, segment.TotalElevationGain)
+
+		if segment.TotalElevationGain > 0{
+			fmt.Printf("Uphill\n\n")
+		}else{
+			fmt.Printf("Downhill\n\n")
+		}
 	}
 
 }
