@@ -49,12 +49,16 @@ func measureSegmentComplexity(segmentId int64, accessToken string) {
 
    var points [][2]float64 = polyline.Decode()
 
-   var averageLength float64 = averageLineSegmentLength(points)
-   var epsilon = averageLength * epsilonRatio
+   //var averageLength float64 = averageLineSegmentLength(points)
+   //var epsilon = averageLength * epsilonRatio
 
-   var complexityScore = countDRPSimplifications(points, epsilon)
+   //var complexityScore = countDRPSimplifications(points, epsilon)
 
-   fmt.Println("Segment ", segmentId, " has a complexity score of ", complexityScore)
+   //fmt.Println("Segment ", segmentId, " has a complexity score of ", complexityScore)
+
+   var fractionalDimension = estimateFractionalDimension(points)
+
+   fmt.Println("Segment ", segmentId, " has an estimated fractional dimension of ", fractionalDimension)
 }
 
 func averageLineSegmentLength(points [][2]float64) float64 {
@@ -150,4 +154,43 @@ func getDistanceFromSegment(point [2]float64, segment [2][2]float64) float64 {
       var denominator = math.Sqrt(AtoB[0] * AtoB[0] + AtoB[1] * AtoB[1])
       return numerator / denominator
    }
+}
+
+func estimateFractionalDimension(points [][2]float64) float64 {
+   var pathLengths []float64
+   var steps int64 = 0
+   var currentPath [][2]float64 = points
+   
+   for ; len(currentPath) >= 4; steps++ {
+      // Find the current length and put it in the pathLengths slice
+      pathLengths = append(pathLengths, calculatePathLength(currentPath))
+
+      // Make the new path by skipping every other point in the current path
+      var newPath [][2]float64
+      for i := 0; 2 * i < len(currentPath); i++ {
+         newPath = append(newPath, currentPath[2 * i])
+      }
+
+      // Keep the end point in the path
+      if len(currentPath) % 2 != 0 {
+         newPath = append(newPath, currentPath[len(currentPath) - 1])
+      }
+
+      currentPath = newPath
+   }
+
+   // Now that we have the list of lengths, average the ratios
+   var totalRatio float64
+   var step int64
+
+   for step = 0; step < steps - 1; step++ {
+      totalRatio += pathLengths[step + 1] / pathLengths[step]
+   }
+
+   return totalRatio / float64(steps)
+}
+
+// I already wrote the average method so I will just use that
+func calculatePathLength(points [][2]float64) float64 {
+   return averageLineSegmentLength(points) * float64(len(points))
 }
