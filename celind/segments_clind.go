@@ -17,6 +17,7 @@ func main() {
 	var accessToken string
 	const SEGMENT_SIZE = 10
 	const KM_PER_MILE = 1.60934
+	const SEC_TO_MIN = 60
 
 	segmentList := [SEGMENT_SIZE]int64{365235, 6452581, 664647, 1089563, 4956199,
 					 		2187, 5732938, 654030, 616554, 3139189};
@@ -55,25 +56,45 @@ func main() {
 				 segment.Name, verb, segment.EffortCount, segment.AthleteCount)
 
 		//for all the segments, grab and calculate all the segment efforts
-		var totalTime int
-		// return list of segment efforts
-		segmentEfforts, err := service.ListEfforts(segmentId).Do();
+		var totalMovingTimeInSeconds int
+		var totalElapsedTimeInSeconds int
+		// return list of segment efforts: this is PAGED
+		segmentEfforts, err := service.ListEfforts(segmentId).Do()
+		segmentEffortsSliceLen := len(segmentEfforts)
+		fmt.Printf("Averages over first %d results\n", segmentEffortsSliceLen)
 
 		for _, segmentEffortSummary := range segmentEfforts {
-   			totalTime += segmentEffortSummary.MovingTime;
+			if(segmentEffortSummary.MovingTime > 0) {
+   				totalMovingTimeInSeconds += segmentEffortSummary.MovingTime;
+   			}
+   			if(segmentEffortSummary.ElapsedTime > 0) {
+   				totalElapsedTimeInSeconds += segmentEffortSummary.ElapsedTime;
+   			}
 		}   
 
-		avgPace := float64(totalTime / segment.EffortCount)
-		fmt.Printf("Avg Pace %.2f\n", avgPace);
-
+		// moving time
+		avgMovingPace := float64(totalMovingTimeInSeconds) / float64(segmentEffortsSliceLen)
+		avgMovingPace /= SEC_TO_MIN
+		// calculating distances
 		kmDistance := segment.Distance / 1000
+		avgMovingPacePerKm := avgMovingPace / kmDistance
+		avgMovingPacePerMile := avgMovingPacePerKm * KM_PER_MILE
+		// summary text
+		fmt.Printf("MOVING: Total distance of %.2f km %s with an average pace of %.2f min per km (%.2f min per mile)\n",
+			kmDistance, verb, avgMovingPacePerKm, avgMovingPacePerMile)
 
-		avgPacePerKm := avgPace / kmDistance
-		avgPacePerMile := avgPacePerKm * KM_PER_MILE
+		// elapsed time
+		avgElapsedPace := float64(totalElapsedTimeInSeconds) / float64(segmentEffortsSliceLen)
+		avgElapsedPace /= SEC_TO_MIN
+		// calculating distances
+		kmDistance = segment.Distance / 1000
+		avgElapsedPacePerKm := avgElapsedPace / kmDistance
+		avgElapsedPacePerMile := avgElapsedPacePerKm * KM_PER_MILE
+		// summary text
+		fmt.Printf("ELAPSED: Total distance of %.2f km %s with an average pace of %.2f min per km (%.2f min per mile)\n\n",
+			kmDistance, verb, avgElapsedPacePerKm, avgElapsedPacePerMile)
 
 
-		fmt.Printf("Total distance of %.2f km %s with an average pace of %f per km (%.2f per mile)\n\n",
-			kmDistance, verb, avgPacePerMile, avgPacePerMile)
 
 	}
 }
