@@ -8,12 +8,6 @@ import (
    "github.com/strava/go.strava"
 )
 
-// func main() {
-//    meap := []float64{2.0, 3.0, 5.0, 7.0, 11.0, 13.0}
-
-//    fmt.Printf("Variance: %f\n", variance(meap))
-// }
-
 func main() {
    var accessToken string
 
