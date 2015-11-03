@@ -73,25 +73,16 @@ func main() {
 		}   
 
 		// moving time
-		avgMovingPace := float64(totalMovingTimeInSeconds) / float64(segmentEffortsSliceLen)
-		avgMovingPace /= SEC_TO_MIN
-		// calculating distances
-		kmDistance := segment.Distance / 1000
-		avgMovingPacePerKm := avgMovingPace / kmDistance
-		avgMovingPacePerMile := avgMovingPacePerKm * KM_PER_MILE
+		avgMovingTime := (float64(totalMovingTimeInSeconds) / float64(segmentEffortsSliceLen)) / SEC_TO_MIN
 		// summary text
-		fmt.Printf("MOVING: Total distance of %.2f km %s with an average pace of %.2f min per km (%.2f min per mile)\n",
-			kmDistance, verb, avgMovingPacePerKm, avgMovingPacePerMile)
+		fmt.Printf("MOVING: Total distance of %.2f km %s with an average time of %.2f min \n",
+			segment.Distance, verb, avgMovingTime)
 
 		// elapsed time
-		avgElapsedPace := float64(totalElapsedTimeInSeconds) / float64(segmentEffortsSliceLen)
-		avgElapsedPace /= SEC_TO_MIN
-		// calculating distances
-		kmDistance = segment.Distance / 1000
-		avgElapsedPacePerKm := avgElapsedPace / kmDistance
-		avgElapsedPacePerMile := avgElapsedPacePerKm * KM_PER_MILE
+		avgElapsedTime := (float64(totalElapsedTimeInSeconds) / float64(segmentEffortsSliceLen)) / SEC_TO_MIN
 		// summary text
-		fmt.Printf("ELAPSED: Total distance of %.2f km %s with an average pace of %.2f min per km (%.2f min per mile)\n\n",
-			kmDistance, verb, avgElapsedPacePerKm, avgElapsedPacePerMile)
+		fmt.Printf("ELAPSED: Total distance of %.2f km %s with an average time of %.2f min\n\n",
+			segment.Distance, verb, avgElapsedTime)
+
 	}
 }
