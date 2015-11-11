@@ -2,6 +2,7 @@ package path
 
 import (
    "math"
+   "github.com/go-gl/mathgl/mgl64"
 )
 
 func PolylineLength(points [][2]float64) float64 {
@@ -22,4 +23,8 @@ func AveragePolylineSegmentLength(points [][2]float64) float64 {
    } else {
       return PolylineLength(points) / float64(len(points) - 1)
    }
+}
+
+func AngleBetween(v1 mgl64.Vec2, v2 mgl64.Vec2) float64 {
+   return math.Acos(v1.Dot(v2) / (v1.Len() * v2.Len()))
 }
