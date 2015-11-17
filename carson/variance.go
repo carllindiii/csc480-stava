@@ -29,6 +29,8 @@ func main() {
    client := strava.NewClient(accessToken)
    service := strava.NewSegmentsService(client)
    var times []float64
+   // var stdDev float64
+   // var variance float64
 
    for i := 0; i < len(segmentIds); i++ {
       times = nil
@@ -71,8 +73,22 @@ func main() {
          pageNum++
       }
 
-      fmt.Printf("Variance of elapsed times (min): %f\n", variance(times) / 60.0)
-      fmt.Printf("StdDev of elapsed times (min): %f\n\n", stdDev(variance(times)) / 60.0)
+      variance := variance(times)
+      stdDev := stdDev(variance)
+      stdDevInMin := stdDev / 60.0
+      varianceInMin := variance / 60.0
+
+      fmt.Printf("Variance of elapsed times (min): %f\n", varianceInMin)
+      fmt.Printf("StdDev of elapsed times (min): %f\n\n", stdDevInMin)
+
+      if stdDevInMin < 2.0 {
+         fmt.Printf("Label: EASY\n")
+      } else if stdDevInMin > 2.0 && stdDevInMin < 4.0 {
+         fmt.Printf("Label: MEDIUM\n")
+      } else {
+         fmt.Printf("Label: HARD\n")
+      }
+
       fmt.Printf("---------------------------------------------\n\n")
    }
 }
