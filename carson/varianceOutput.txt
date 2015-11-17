@@ -1,0 +1,100 @@
+Fetching segment 365235 info...
+Prefumo Canyon from fire hydrant to top, ridden 6832 times by 1333 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 4065.438583
+StdDev of elapsed times (min): 8.231483
+
+Label: HARD
+---------------------------------------------
+
+Fetching segment 6452581 info...
+Full Chutes and Ladders DH, ridden 8332 times by 1088 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 260.151065
+StdDev of elapsed times (min): 2.082271
+
+Label: MEDIUM
+---------------------------------------------
+
+Fetching segment 664647 info...
+Morning Glory, ridden 5073 times by 1084 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 3722.020525
+StdDev of elapsed times (min): 7.876146
+
+Label: HARD
+---------------------------------------------
+
+Fetching segment 1089563 info...
+Eucs DH, ridden 14412 times by 1641 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 376.712878
+StdDev of elapsed times (min): 2.505703
+
+Label: MEDIUM
+---------------------------------------------
+
+Fetching segment 4956199 info...
+Shooters DH, ridden 6895 times by 1103 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 712.019421
+StdDev of elapsed times (min): 3.444850
+
+Label: MEDIUM
+---------------------------------------------
+
+Fetching segment 2187 info...
+See Canyon (from cattle guard), ridden 4979 times by 957 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 1311.619530
+StdDev of elapsed times (min): 4.675503
+
+Label: HARD
+---------------------------------------------
+
+Fetching segment 5732938 info...
+Rock Garden mk27, ridden 7573 times by 723 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 814.918315
+StdDev of elapsed times (min): 3.685373
+
+Label: MEDIUM
+---------------------------------------------
+
+Fetching segment 654030 info...
+South Ontario towards SLO, ridden 22473 times by 2740 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 553.324798
+StdDev of elapsed times (min): 3.036788
+
+Label: MEDIUM
+---------------------------------------------
+
+Fetching segment 616554 info...
+Turri Bump, ridden 11815 times by 2705 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 116.145088
+StdDev of elapsed times (min): 1.391313
+
+Label: EASY
+---------------------------------------------
+
+Fetching segment 3139189 info...
+Buckley- Biddle, ridden 15622 times by 2788 athletes
+
+Fetching leaderboard...
+Variance of elapsed times (min): 252.642923
+StdDev of elapsed times (min): 2.052003
+
+Label: MEDIUM
+---------------------------------------------
+
