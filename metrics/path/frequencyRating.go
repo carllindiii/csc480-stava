@@ -5,6 +5,18 @@ import (
    "github.com/mjibson/go-dsp/fft"
 )
 
+func ClassifyDifficultyWithFrequencyRating(points [][2]float64) string {
+   var value = ComputeFrequencyRating(points)
+
+   if value > 400 {
+      return "Hard"
+   } else if value > 200 {
+      return "Medium"
+   } else {
+      return "Easy"
+   }
+}
+
 // This basically takes the inner product of the FFT of the path treated as a
 // complex signal and a linear function with positive values for
 // high frequencies and negative values for low frequencies.

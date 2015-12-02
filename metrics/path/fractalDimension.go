@@ -1,5 +1,17 @@
 package path
 
+func ClassifyDifficultyWithFractalDimension(points [][2]float64) string {
+   var value = EstimateFractalDimension(points)
+
+   if value < 0.7 {
+      return "Hard"
+   } else if value < 0.8 {
+      return "Medium"
+   } else {
+      return "Easy"
+   }
+}
+
 // TODO: tweak this so that it always keeps the first and last points,
 // and so that it always goes down to just those 2 points at the end.
 func EstimateFractalDimension(points [][2]float64) float64 {

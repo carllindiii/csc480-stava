@@ -4,9 +4,21 @@ import (
    "math"
 )
 
+func ClassifyDifficultyWithSimplificationCount(points [][2]float64) string {
+   var value = CountDRPSimplifications(points)
+
+   if value > 40 {
+      return "Hard"
+   } else if value > 20 {
+      return "Medium"
+   } else {
+      return "Easy"
+   }
+}
+
 const epsilonRatio float64 = 0.2
 
-func CountDRPSimplifications(points[][2]float64, epsilon float64) int64 {
+func CountDRPSimplifications(points [][2]float64) int64 {
    var averageSegmentLength float64 = AveragePolylineSegmentLength(points)
    return CountDRPSimplificationsWithEpsilon(points, averageSegmentLength * epsilonRatio)
 }
