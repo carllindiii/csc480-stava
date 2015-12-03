@@ -40,16 +40,20 @@ func main() {
 
    for _, nextSegId := range segIds {
       fmt.Printf("nextSegId: %d\n", nextSegId);
+
       segment, err := segmentService.Get(nextSegId).Do()
+      var latLngCrds [][2]float64 = segment.Map.Polyline.Decode()
 
       if err != nil {
          fmt.Println(err)
          os.Exit(1)
       }
+      
+      numSharpTurns_difficulty, numSharpTurns := path.GetNumSharpTurns(latLngCrds)
+      fmt.Printf("\tsharp turns (catnullRom): %d (%f)\n", numSharpTurns, numSharpTurns_difficulty)
 
-      var latLngCrds [][2]float64 = segment.Map.Polyline.Decode()
-      fmt.Printf("\tsecant: %d\n", path.GetNumSharpTurnsSecant(latLngCrds))
-      fmt.Printf("\tcatnullRom: %d\n", path.GetNumSharpTurns(latLngCrds))
+      simplificationCount_difficulty := path.ClassifyDifficultyWithSimplificationCount(latLngCrds)
+      fmt.Printf("\tsimplificationCount_difficulty: %f\n", simplificationCount_difficulty)
 
       paceTop30, paceAll := time.GetPace(segment, segmentService)
       fmt.Printf("\tpace: %f, %f\n", paceTop30, paceAll)

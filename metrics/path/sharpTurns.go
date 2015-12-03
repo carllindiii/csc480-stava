@@ -1,12 +1,8 @@
 package path
 
 import (
-   "flag"
-   "fmt"
-   "os"
    "math"
-
-   "github.com/strava/go.strava"
+   
    "github.com/go-gl/mathgl/mgl64"
 )
 
@@ -14,16 +10,16 @@ import (
 //    return math.Acos(v1.Dot(v2) / (v1.Len() * v2.Len()))
 // }
 
-func getCurviness(points [][2]float64) int {
-   count := GetNumSharpTurns(points)
-   if (count > 5) {
-      return 2
-   }
-   if (count > 3) {
-      return 1
-   }
-   return 0
-}
+// func getCurviness(points [][2]float64) int {
+//    count := GetNumSharpTurns(points)
+//    if (count > 5) {
+//       return 2
+//    }
+//    if (count > 3) {
+//       return 1
+//    }
+//    return 0
+// }
 
 func catmullRom(p1, p2, p3, p4 mgl64.Vec2, u float64) mgl64.Vec2 {
    var B mgl64.Mat4
@@ -65,7 +61,7 @@ func angleBetween(v1, v2 mgl64.Vec2) float64 {
    return math.Acos(v1.Dot(v2)/(v1.Len() * v2.Len()));
 }
 
-func GetNumSharpTurns(points [][2]float64) int {
+func GetNumSharpTurns(points [][2]float64) (float64, int) {
    arrLens := len(points) - 2
 
    tangents := make([][2]float64, arrLens)
@@ -100,7 +96,16 @@ func GetNumSharpTurns(points [][2]float64) int {
       }
    }
 
-   return numSharpTurns
+   var difficulty float64
+   if (numSharpTurns < 5) {
+      difficulty =  0
+   } else if (numSharpTurns < 10) {
+      difficulty = 0.5
+   } else {
+      difficulty = 1
+   }
+
+   return difficulty, numSharpTurns
 }
 
 func GetNumSharpTurnsSecant(points [][2]float64) int {
@@ -142,44 +147,44 @@ func GetNumSharpTurnsSecant(points [][2]float64) int {
    return numSharpTurns
 }
 
-func main() {
-   var segmentId int64
-   var accessToken string
+// func main() {
+//    var segmentId int64
+//    var accessToken string
 
-   // Provide an access token, with write permissions.
-   // You'll need to complete the oauth flow to get one.
-   flag.Int64Var(&segmentId, "id", 229781, "Strava Segment Id")
-   flag.StringVar(&accessToken, "token", "", "Access Token")
+//    // Provide an access token, with write permissions.
+//    // You'll need to complete the oauth flow to get one.
+//    flag.Int64Var(&segmentId, "id", 229781, "Strava Segment Id")
+//    flag.StringVar(&accessToken, "token", "", "Access Token")
 
-   flag.Parse()
+//    flag.Parse()
 
-   if accessToken == "" {
-      fmt.Println("\nPlease provide an access_token, one can be found at https://www.strava.com/settings/api")
+//    if accessToken == "" {
+//       fmt.Println("\nPlease provide an access_token, one can be found at https://www.strava.com/settings/api")
 
-      flag.PrintDefaults()
-      os.Exit(1)
-   }
+//       flag.PrintDefaults()
+//       os.Exit(1)
+//    }
 
-   client := strava.NewClient(accessToken)
+//    client := strava.NewClient(accessToken)
 
-   segmentService := strava.NewSegmentsService(client)
+//    segmentService := strava.NewSegmentsService(client)
 
-   segIds := [10]int64{365235, 6452581, 664647, 1089563, 4956199, 2187, 5732938, 654030, 616554, 3139189}
+//    segIds := [10]int64{365235, 6452581, 664647, 1089563, 4956199, 2187, 5732938, 654030, 616554, 3139189}
 
 
-   for _, nextSegId := range segIds {
-      fmt.Printf("nextSegId: %d\n", nextSegId);
-      segment, err := segmentService.Get(nextSegId).Do()
+//    for _, nextSegId := range segIds {
+//       fmt.Printf("nextSegId: %d\n", nextSegId);
+//       segment, err := segmentService.Get(nextSegId).Do()
 
-      if err != nil {
-         fmt.Println(err)
-         os.Exit(1)
-      }
+//       if err != nil {
+//          fmt.Println(err)
+//          os.Exit(1)
+//       }
 
-      var latLngCrds [][2]float64 = segment.Map.Polyline.Decode()
-      fmt.Printf("\tsecant: %d\n", GetNumSharpTurnsSecant(latLngCrds))
-      fmt.Printf("\tcatnullRom: %d\n", GetNumSharpTurns(latLngCrds))
-   }
+//       var latLngCrds [][2]float64 = segment.Map.Polyline.Decode()
+//       fmt.Printf("\tsecant: %d\n", GetNumSharpTurnsSecant(latLngCrds))
+//       fmt.Printf("\tcatnullRom: %d\n", GetNumSharpTurns(latLngCrds))
+//    }
 
    
-}
+// }

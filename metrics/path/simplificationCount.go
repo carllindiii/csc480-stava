@@ -4,15 +4,15 @@ import (
    "math"
 )
 
-func ClassifyDifficultyWithSimplificationCount(points [][2]float64) string {
+func ClassifyDifficultyWithSimplificationCount(points [][2]float64) float64 {
    var value = CountDRPSimplifications(points)
 
    if value > 40 {
-      return "Hard"
+      return 1.0
    } else if value > 20 {
-      return "Medium"
+      return 0.5
    } else {
-      return "Easy"
+      return 0.0
    }
 }
 
