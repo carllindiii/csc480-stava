@@ -55,14 +55,16 @@ func main() {
       simplificationCount_difficulty := path.ClassifyDifficultyWithSimplificationCount(latLngCrds)
       fmt.Printf("\tsimplificationCount_difficulty: %f\n", simplificationCount_difficulty)
 
-      paceTop30, paceAll := time.GetPace(segment, segmentService)
-      fmt.Printf("\tpace: %f, %f\n", paceTop30, paceAll)
+      pace_difficulty, paceTop30, paceAll := time.GetPace(segment, segmentService)
+      fmt.Printf("\tpace: %f, %f (%f)\n", paceTop30, paceAll, pace_difficulty)
 
       uphillyNess := elevation.IsUphill(segment)
       fmt.Printf("\tis uphill: %f\n", uphillyNess)
 
       stdDevLeaderBoard_neural, stdDevLeaderBoard := carson.StdDevOfLeaderBoard(segment, segmentService)
       fmt.Printf("\tstdDev of leaderboard: %f (%f)\n", stdDevLeaderBoard, stdDevLeaderBoard_neural)
+
+
    }
 
    
