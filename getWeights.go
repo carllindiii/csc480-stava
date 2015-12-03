@@ -6,8 +6,10 @@ import (
    "os"
 
    "github.com/strava/go.strava"
+
    "./metrics/path"
    "./metrics/time"
+   "./metrics/elevation"
 )
 
 func main() {
@@ -50,6 +52,9 @@ func main() {
 
       paceTop30, paceAll := time.GetPace(segment, segmentService)
       fmt.Printf("\tpace: %f, %f\n", paceTop30, paceAll)
+
+      uphillyNess := elevation.IsUphill(segment)
+      fmt.Printf("\tis uphill: %f\n", uphillyNess)
    }
 
    

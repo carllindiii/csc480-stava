@@ -2,7 +2,7 @@
 // labels whether they are an uphill or downhill segment
 // This will be used to assist us when looking at average
 // speed of a segment
-package main
+package elevation
 
 import (
 	"flag"
@@ -11,6 +11,16 @@ import (
 
 	"github.com/strava/go.strava"
 )
+
+// returns value between 0, 1 for how uphill/downhill segment is
+// 0 is maximum downhilly-ness, 1 is max uphilly-ness
+func IsUphill(segment *strava.SegmentDetailed) float64 {
+	if segment.TotalElevationGain > 0 {
+		return 1.0
+	} else {
+		return 0.0
+	}
+}
 
 func main() {
 	var segmentId int64
@@ -57,9 +67,13 @@ func main() {
 				 segment.Name, verb, segment.EffortCount, segment.AthleteCount)
 
 		if segment.TotalElevationGain > 0{
-			fmt.Printf("Uphill\n\n")
+			fmt.Printf("Uphill ")
 		}else{
-			fmt.Printf("Downhill\n\n")
+			fmt.Printf("Downhill ")
 		}
+
+		fmt.Printf("%f\n", IsUphill(segment))
+
+
 	}
 }
