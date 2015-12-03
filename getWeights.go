@@ -4,6 +4,7 @@ import (
    "flag"
    "fmt"
    "os"
+   "encoding/csv"
 
    "github.com/strava/go.strava"
 
@@ -37,6 +38,21 @@ func main() {
 
    segIds := [10]int64{365235, 6452581, 664647, 1089563, 4956199, 2187, 5732938, 654030, 616554, 3139189}
 
+   csvF, err := os.Create("results.csv")
+
+   defer csvF.Close()
+
+   if (err != nil) {
+      fmt.Println(err)
+      os.Exit(1)
+   }
+
+
+   writer := csv.NewWriter(csvF)
+
+   writer.Write([]string{"segmentId, shapTurns, simplication, pace, uphill, leaderboard"})
+   writer.Flush()
+
 
    for _, nextSegId := range segIds {
       fmt.Printf("nextSegId: %d\n", nextSegId);
@@ -64,7 +80,13 @@ func main() {
       stdDevLeaderBoard_neural, stdDevLeaderBoard := carson.StdDevOfLeaderBoard(segment, segmentService)
       fmt.Printf("\tstdDev of leaderboard: %f (%f)\n", stdDevLeaderBoard, stdDevLeaderBoard_neural)
 
+      //writer.Write([]string{"shapTurns, simplication, pace, uphill, leaderboard
 
+
+
+
+      writer.Write([]string{ fmt.Sprintf("%v,%v,%v,%v,%v,%v",segment.Id ,numSharpTurns_difficulty, simplificationCount_difficulty, pace_difficulty, uphillyNess, stdDevLeaderBoard_neural)})
+      writer.Flush()
    }
 
    
