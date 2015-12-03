@@ -1,4 +1,4 @@
-package main
+package path
 
 import (
    "flag"
@@ -10,12 +10,12 @@ import (
    "github.com/go-gl/mathgl/mgl64"
 )
 
-func AngleBetween(v1 mgl64.Vec2, v2 mgl64.Vec2) float64 {
-   return math.Acos(v1.Dot(v2) / (v1.Len() * v2.Len()))
-}
+// func AngleBetween(v1 mgl64.Vec2, v2 mgl64.Vec2) float64 {
+//    return math.Acos(v1.Dot(v2) / (v1.Len() * v2.Len()))
+// }
 
 func getCurviness(points [][2]float64) int {
-   count := getNumSharpTurns(points)
+   count := GetNumSharpTurns(points)
    if (count > 5) {
       return 2
    }
@@ -65,7 +65,7 @@ func angleBetween(v1, v2 mgl64.Vec2) float64 {
    return math.Acos(v1.Dot(v2)/(v1.Len() * v2.Len()));
 }
 
-func getNumSharpTurns(points [][2]float64) int {
+func GetNumSharpTurns(points [][2]float64) int {
    arrLens := len(points) - 2
 
    tangents := make([][2]float64, arrLens)
@@ -103,7 +103,7 @@ func getNumSharpTurns(points [][2]float64) int {
    return numSharpTurns
 }
 
-func getNumSharpTurnsSecant(points [][2]float64) int {
+func GetNumSharpTurnsSecant(points [][2]float64) int {
    arrLens := len(points) - 2
    // dists := make([]float64, arrLens)
    angles := make([]float64, arrLens)
@@ -177,8 +177,8 @@ func main() {
       }
 
       var latLngCrds [][2]float64 = segment.Map.Polyline.Decode()
-      fmt.Printf("\tsecant: %d\n", getNumSharpTurnsSecant(latLngCrds))
-      fmt.Printf("\tcatnullRom: %d\n", getNumSharpTurns(latLngCrds))
+      fmt.Printf("\tsecant: %d\n", GetNumSharpTurnsSecant(latLngCrds))
+      fmt.Printf("\tcatnullRom: %d\n", GetNumSharpTurns(latLngCrds))
    }
 
    
