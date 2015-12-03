@@ -7,6 +7,7 @@ import (
 
    "github.com/strava/go.strava"
    "./metrics/path"
+   "./metrics/time"
 )
 
 func main() {
@@ -46,6 +47,9 @@ func main() {
       var latLngCrds [][2]float64 = segment.Map.Polyline.Decode()
       fmt.Printf("\tsecant: %d\n", path.GetNumSharpTurnsSecant(latLngCrds))
       fmt.Printf("\tcatnullRom: %d\n", path.GetNumSharpTurns(latLngCrds))
+
+      paceTop30, paceAll := time.GetPace(segment, segmentService)
+      fmt.Printf("\tpace: %f, %f\n", paceTop30, paceAll)
    }
 
    

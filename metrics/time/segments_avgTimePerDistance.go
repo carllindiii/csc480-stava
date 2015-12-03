@@ -2,7 +2,7 @@
 // labels whether they are an uphill or downhill segment
 // This will be used to assist us when looking at average
 // speed of a segment
-package main
+package time
 
 import (
 	"flag"
@@ -12,18 +12,18 @@ import (
 	"github.com/strava/go.strava"
 )
 
-func doTheThing(segment *strava.SegmentDetailed, service *strava.SegmentsService) {
+func GetPace(segment *strava.SegmentDetailed, service *strava.SegmentsService) (float64, float64) {
 	const KM_PER_MILE = 1.60934
 	const SEC_TO_MIN = 60
 
 	segmentId := segment.Id
 
-	verb := "ridden"
-	if segment.ActivityType == strava.ActivityTypes.Run {
-		verb = "run"
-	}
-	fmt.Printf("%s, %s %d times by %d athletes\n",
-			 segment.Name, verb, segment.EffortCount, segment.AthleteCount)
+	// verb := "ridden"
+	// if segment.ActivityType == strava.ActivityTypes.Run {
+	// 	verb = "run"
+	// }
+	// fmt.Printf("%s, %s %d times by %d athletes\n",
+			 // segment.Name, verb, segment.EffortCount, segment.AthleteCount)
 
 	//for all the segments, grab and calculate all the segment efforts
 	var totalMovingTimeInSeconds int
@@ -37,7 +37,7 @@ func doTheThing(segment *strava.SegmentDetailed, service *strava.SegmentsService
 	}
 
 	segmentEffortsSliceLen := len(segmentEfforts)
-	fmt.Printf("Averages over first %d results\n", segmentEffortsSliceLen)
+	// fmt.Printf("Averages over first %d results\n", segmentEffortsSliceLen)
 
 	for _, segmentEffortSummary := range segmentEfforts {
 		if(segmentEffortSummary.MovingTime > 0) {
@@ -55,9 +55,11 @@ func doTheThing(segment *strava.SegmentDetailed, service *strava.SegmentsService
 	kmDistance := segment.Distance / 1000
 	avgMovingPacePerKm := avgMovingPace / kmDistance
 	avgMovingPacePerMile := avgMovingPacePerKm * KM_PER_MILE
+
+	paceTop30 := avgMovingPacePerMile
 	// summary text
-	fmt.Printf("MOVING: Total distance of %.2f km %s with an average pace of %.2f min per km (%.2f min per mile)\n",
-		kmDistance, verb, avgMovingPacePerKm, avgMovingPacePerMile)
+	// fmt.Printf("MOVING: Total distance of %.2f km %s with an average pace of %.2f min per km (%.2f min per mile)\n",
+		// kmDistance, verb, avgMovingPacePerKm, avgMovingPacePerMile)
 
 	// elapsed time
 	avgElapsedPace := float64(totalElapsedTimeInSeconds) / float64(segmentEffortsSliceLen)
@@ -67,8 +69,10 @@ func doTheThing(segment *strava.SegmentDetailed, service *strava.SegmentsService
 	avgElapsedPacePerKm := avgElapsedPace / kmDistance
 	avgElapsedPacePerMile := avgElapsedPacePerKm * KM_PER_MILE
 	// summary text
-	fmt.Printf("ELAPSED: Total distance of %.2f km %s with an average pace of %.2f min per km (%.2f min per mile)\n\n",
-		kmDistance, verb, avgElapsedPacePerKm, avgElapsedPacePerMile)
+	// fmt.Printf("ELAPSED: Total distance of %.2f km %s with an average pace of %.2f min per km (%.2f min per mile)\n\n",
+		// kmDistance, verb, avgElapsedPacePerKm, avgElapsedPacePerMile)
+
+	return paceTop30, avgElapsedPacePerMile
 }
 
 func main() {
@@ -105,6 +109,8 @@ func main() {
 			os.Exit(1)
 		}
 
-		doTheThing(segment, service)
+		paceTop30, paceAll := GetPace(segment, service)
+		fmt.Println(segment.Id)
+		fmt.Printf("\t%f, %f", paceTop30, paceAll)
 	}
 }

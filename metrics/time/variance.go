@@ -1,104 +1,106 @@
-package main
+package time
 
-import (
-   "fmt"
-   "math"
-   "os"
-   "flag"
-   "github.com/strava/go.strava"
-)
+// package main
 
-func main() {
-   var accessToken string
+// import (
+//    "fmt"
+//    "math"
+//    "os"
+//    "flag"
+//    "github.com/strava/go.strava"
+// )
 
-   // Provide an access token, with write permissions.
-   // You'll need to complete the oauth flow to get one.
-   flag.StringVar(&accessToken, "token", "", "Access Token")
+// func main() {
+//    var accessToken string
 
-   flag.Parse()
+//    // Provide an access token, with write permissions.
+//    // You'll need to complete the oauth flow to get one.
+//    flag.StringVar(&accessToken, "token", "", "Access Token")
 
-   if accessToken == "" {
-      fmt.Println("\nPlease provide an access_token, one can be found at https://www.strava.com/settings/api")
+//    flag.Parse()
 
-      flag.PrintDefaults()
-      os.Exit(1)
-   }
+//    if accessToken == "" {
+//       fmt.Println("\nPlease provide an access_token, one can be found at https://www.strava.com/settings/api")
 
-   segmentIds := [...]int64{365235, 6452581, 664647, 1089563, 4956199, 2187, 5732938, 654030, 616554, 3139189}
+//       flag.PrintDefaults()
+//       os.Exit(1)
+//    }
 
-   client := strava.NewClient(accessToken)
-   service := strava.NewSegmentsService(client)
-   var times []float64
+//    segmentIds := [...]int64{365235, 6452581, 664647, 1089563, 4956199, 2187, 5732938, 654030, 616554, 3139189}
 
-   for i := 0; i < len(segmentIds); i++ {
-      times = nil
-      segmentId := segmentIds[i]
-      fmt.Printf("Fetching segment %d info...\n", segmentId)
-      segment, err := service.Get(segmentId).Do()
+//    client := strava.NewClient(accessToken)
+//    service := strava.NewSegmentsService(client)
+//    var times []float64
 
-      if err != nil {
-         fmt.Println(err)
-         os.Exit(1)
-      }
+//    for i := 0; i < len(segmentIds); i++ {
+//       times = nil
+//       segmentId := segmentIds[i]
+//       fmt.Printf("Fetching segment %d info...\n", segmentId)
+//       segment, err := service.Get(segmentId).Do()
 
-      verb := "ridden"
-      if segment.ActivityType == strava.ActivityTypes.Run {
-         verb = "run"
-      }
+//       if err != nil {
+//          fmt.Println(err)
+//          os.Exit(1)
+//       }
 
-      fmt.Printf("%s, %s %d times by %d athletes\n\n", segment.Name, verb, segment.EffortCount, segment.AthleteCount)
+//       verb := "ridden"
+//       if segment.ActivityType == strava.ActivityTypes.Run {
+//          verb = "run"
+//       }
 
-      fmt.Printf("Fetching leaderboard...\n")
+//       fmt.Printf("%s, %s %d times by %d athletes\n\n", segment.Name, verb, segment.EffortCount, segment.AthleteCount)
 
-      times = make([]float64, segment.AthleteCount, segment.AthleteCount)
+//       fmt.Printf("Fetching leaderboard...\n")
 
-      pageNum := 1
-      index := 0
+//       times = make([]float64, segment.AthleteCount, segment.AthleteCount)
 
-      for index < segment.AthleteCount {
-        results, err := service.GetLeaderboard(segmentId).Page(pageNum).PerPage(200).Do()
+//       pageNum := 1
+//       index := 0
 
-         if err != nil {
-            fmt.Println(err)
-            os.Exit(1)
-         }
+//       for index < segment.AthleteCount {
+//         results, err := service.GetLeaderboard(segmentId).Page(pageNum).PerPage(200).Do()
 
-         for _, result := range results.Entries {
-            times[index] = float64(result.ElapsedTime)
-            index++
-         }
+//          if err != nil {
+//             fmt.Println(err)
+//             os.Exit(1)
+//          }
 
-         pageNum++
-      }
+//          for _, result := range results.Entries {
+//             times[index] = float64(result.ElapsedTime)
+//             index++
+//          }
 
-      fmt.Printf("Variance of elapsed times (min): %f\n", variance(times) / 60.0)
-      fmt.Printf("StdDev of elapsed times (min): %f\n\n", stdDev(variance(times)) / 60.0)
-      fmt.Printf("---------------------------------------------\n\n")
-   }
-}
+//          pageNum++
+//       }
 
-func variance(values []float64) float64 {
-   mean := mean(values)
+//       fmt.Printf("Variance of elapsed times (min): %f\n", variance(times) / 60.0)
+//       fmt.Printf("StdDev of elapsed times (min): %f\n\n", stdDev(variance(times)) / 60.0)
+//       fmt.Printf("---------------------------------------------\n\n")
+//    }
+// }
 
-   sumOfSquares := 0.0
+// func variance(values []float64) float64 {
+//    mean := mean(values)
 
-   for i := 0; i < len(values); i++ {
-      sumOfSquares = sumOfSquares + math.Pow(values[i] - mean, 2)
-   }
+//    sumOfSquares := 0.0
 
-   return sumOfSquares / float64(len(values))
-}
+//    for i := 0; i < len(values); i++ {
+//       sumOfSquares = sumOfSquares + math.Pow(values[i] - mean, 2)
+//    }
 
-func mean(values []float64) float64 {
-   sum := 0.0
+//    return sumOfSquares / float64(len(values))
+// }
 
-   for i := 0; i < len(values); i++ {
-      sum = sum +  values[i]
-   }
+// func mean(values []float64) float64 {
+//    sum := 0.0
 
-   return sum / float64(len(values))
-}
+//    for i := 0; i < len(values); i++ {
+//       sum = sum +  values[i]
+//    }
 
-func stdDev(variance float64) float64 {
-   return math.Sqrt(variance)
-}
+//    return sum / float64(len(values))
+// }
+
+// func stdDev(variance float64) float64 {
+//    return math.Sqrt(variance)
+// }
