@@ -10,6 +10,7 @@ import (
    "./metrics/path"
    "./metrics/time"
    "./metrics/elevation"
+   "./carson"
 )
 
 func main() {
@@ -55,6 +56,9 @@ func main() {
 
       uphillyNess := elevation.IsUphill(segment)
       fmt.Printf("\tis uphill: %f\n", uphillyNess)
+
+      stdDevLeaderBoard_neural, stdDevLeaderBoard := carson.StdDevOfLeaderBoard(segment, segmentService)
+      fmt.Printf("\tstdDev of leaderboard: %f (%f)\n", stdDevLeaderBoard, stdDevLeaderBoard_neural)
    }
 
    
