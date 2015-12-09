@@ -4,7 +4,7 @@ import (
    "flag"
    "fmt"
    "os"
-   "github.com/carllindiii/csc480-stava/stravaAI"
+   ".."
    "github.com/strava/go.strava"
 )
 
@@ -26,19 +26,12 @@ func main() {
       os.Exit(1)
    }
 
-   client := strava.NewClient(accessToken)
-
-   segmentService := strava.NewSegmentsService(client)
+   stravaClient := strava.NewClient(accessToken)
+   stravaAIClient := stravaAI.NewClient(stravaClient)
 
    segIds := [10]int64{365235, 6452581, 664647, 1089563, 4956199, 2187, 5732938, 654030, 616554, 3139189}
 
-
-
    for _, nextSegId := range segIds {
-      fmt.Printf("nextSegId: %d\n", nextSegId);
-
-      segment, _ := segmentService.Get(nextSegId).Do()
-      fmt.Println(segment)
-      // stravaAI.getSegmentDifficulty(segment)
+      fmt.Println(stravaAIClient.GetSegmentIdDifficulty(nextSegId))
    }
 }
