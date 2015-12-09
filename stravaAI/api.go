@@ -1,9 +1,9 @@
 package stravaAI
 
 import (
-   "./metrics/path"
-   "./metrics/time"
-   "./metrics/elevation"
+   "github.com/carllindiii/csc480-stava/stravaAI/metrics/path"
+   "github.com/carllindiii/csc480-stava/stravaAI/metrics/time"
+   "github.com/carllindiii/csc480-stava/stravaAI/metrics/elevation"
 
    "github.com/strava/go.strava"
 )
