@@ -3,9 +3,9 @@ package stravaAI
 import (
    "github.com/strava/go.strava"
 
-   "./metrics/path"
-   "./metrics/time"
-   "./metrics/elevation"
+   "github.com/strava/go.strava/metrics/path"
+   "github.com/strava/go.strava/metrics/time"
+   "github.com/strava/go.strava/metrics/elevation"
 )
 
 type Client struct {
