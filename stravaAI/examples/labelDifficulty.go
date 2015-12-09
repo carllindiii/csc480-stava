@@ -9,12 +9,12 @@ import (
 )
 
 func main() {
-    var segmentId int64
+   var segmentId int64
    var accessToken string
 
    // Provide an access token, with write permissions.
    // You'll need to complete the oauth flow to get one.
-   flag.Int64Var(&segmentId, "id", 229781, "Strava Segment Id")
+   flag.Int64Var(&segmentId, "id", -1, "Strava Segment Id")
    flag.StringVar(&accessToken, "token", "", "Access Token")
 
    flag.Parse()
@@ -26,12 +26,32 @@ func main() {
       os.Exit(1)
    }
 
+   if segmentId <0 {
+      fmt.Println("\nPlease provide a segment id")
+
+      flag.PrintDefaults()
+      os.Exit(1)
+   }
+
    stravaClient := strava.NewClient(accessToken)
    stravaAIClient := stravaAI.NewClient(stravaClient)
 
-   segIds := [10]int64{365235, 6452581, 664647, 1089563, 4956199, 2187, 5732938, 654030, 616554, 3139189}
+   fmt.Println("please wait...")
 
-   for _, nextSegId := range segIds {
-      fmt.Println(stravaAIClient.GetSegmentIdDifficulty(nextSegId))
+   difficulty, err := stravaAIClient.GetSegmentIdDifficulty(segmentId)
+
+   if (err != nil) {
+      fmt.Println("something went wrong");
+      fmt.Println(err)
+   }
+
+   if difficulty == stravaAI.EASY {
+      fmt.Println("that's an easy segment")
+   } else if difficulty == stravaAI.MEDIUM {
+      fmt.Println("watch out. That's a medium segment")
+   } else if difficulty == stravaAI.HARD {
+      fmt.Println("that's a hard segment. Don't go on it unless you are pro")
+   } else {
+      fmt.Println("something went wrong")
    }
 }
